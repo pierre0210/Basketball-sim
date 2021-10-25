@@ -1,15 +1,13 @@
 import numpy as np
 
 class ball:
-    def __init__(self, distance, mass, height=3.05, ballD=0.24, rimD=0.4572, angle=45, cw=0, density=0, g=9.8):
-        self.dis = distance
+    def __init__(self, mass, height=3.05, ballD=0.24, rimD=0.4572, cw=0, airDensity=0, g=9.8):
         self.mass = mass
         self.height = height
         self.ballD = ballD
         self.rimD = rimD
-        self.angle = angle
         self.cw = cw
-        self.density = density
+        self.density = airDensity
         self.g = g
         self.xpos = 0
         self.ypos = 2
@@ -20,8 +18,10 @@ class ball:
         self.ypos = 2
         #self.curTime = 0
 
-    def shoot(self, v, av=0):
+    def shoot(self, v, angle, distance):
         self.clear()
+        self.angle = angle
+        self.dis = distance
         xlist = []
         ylist = []
         isInRange = False
@@ -29,10 +29,12 @@ class ball:
         self.vy = v*np.sin(self.angle*np.pi/180.0)
         self.od = self.distance(self.xpos, self.ypos)
         while True:
+            df = self.force(self.vx, self.vy)
             self.xpos += self.vx*self.dt
             self.ypos += self.vy*self.dt
 
-            self.vy -= self.g*self.dt
+            self.vx -= (df[0]/self.mass)*self.dt
+            self.vy -= (self.g+(df[1]/self.mass))*self.dt
             xlist.append(self.xpos)
             ylist.append(self.ypos)
             if self.distance(self.xpos, self.ypos) > self.od:
@@ -48,6 +50,10 @@ class ball:
 
     def distance(self, bx, by):
         return ((self.dis-bx)**2+(self.height-by)**2)**0.5
+
+    def force(self, vx, vy):
+        dragForce = 0.5*self.cw*self.density*((self.ballD/2)**2)*np.pi*(vx**2+vy**2)
+        return [dragForce*np.cos(self.angle*np.pi/180.0), dragForce*np.sin(self.angle*np.pi/180.0)]
 
     def error(self, bx, by):
         slope = -np.cos(self.angle*np.pi/180.0)/np.sin(self.angle*np.pi/180.0)

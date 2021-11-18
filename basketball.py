@@ -11,7 +11,7 @@ class ball:
         self.g = g
         self.xpos = 0
         self.ypos = 2
-        self.dt = 0.01
+        self.dt = 0.005
 
     def clear(self):
         self.xpos = 0
@@ -29,18 +29,22 @@ class ball:
         self.vy = v*np.sin(self.angle*np.pi/180.0)
         self.od = self.distance(self.xpos, self.ypos)
         while True:
-            df = self.force(self.vx, self.vy)
+            df = self.dragForce(self.vx, self.vy)
             self.xpos += self.vx*self.dt
             self.ypos += self.vy*self.dt
-
-            self.vx -= (df[0]/self.mass)*self.dt
-            self.vy -= (self.g+(df[1]/self.mass))*self.dt
+            #print(df)
+            self.vx += -df[0]*self.dt/self.mass
+            self.vy += -self.g*self.dt-df[1]*self.dt/self.mass            
+            #print(str(self.vx)+" "+str(self.vy))
             xlist.append(self.xpos)
             ylist.append(self.ypos)
             if self.distance(self.xpos, self.ypos) > self.od:
                 self.od = self.distance(self.xpos, self.ypos)
                 break
-            elif self.distance(self.xpos, self.ypos) <= self.rimD-self.ballD:
+            #elif self.distance(self.xpos, self.ypos) <= self.rimD/2-self.ballD/2 and self.height > self.ypos:
+                #self.od = self.distance(self.xpos, self.ypos)
+                #break
+            elif self.distance(self.xpos, self.ypos) <= self.rimD/2-self.ballD/2:
                 isInRange = True
                 break
             else:
@@ -51,9 +55,10 @@ class ball:
     def distance(self, bx, by):
         return ((self.dis-bx)**2+(self.height-by)**2)**0.5
 
-    def force(self, vx, vy):
+    def dragForce(self, vx, vy):
+        #curAngle = np.arctan(vy/vx)
         dragForce = 0.5*self.cw*self.density*((self.ballD/2)**2)*np.pi*(vx**2+vy**2)
-        return [dragForce*np.cos(self.angle*np.pi/180.0), dragForce*np.sin(self.angle*np.pi/180.0)]
+        return [dragForce*vx/((vx**2+vy**2)**0.5), dragForce*vy/((vx**2+vy**2)**0.5)]
 
     def error(self, bx, by):
         slope = -np.cos(self.angle*np.pi/180.0)/np.sin(self.angle*np.pi/180.0)

@@ -39,7 +39,7 @@ class ball:
             xlist.append(self.xpos)
             ylist.append(self.ypos)
             if self.distance(self.xpos, self.ypos) > self.od:
-                self.od = self.distance(self.xpos, self.ypos)
+                #self.od = self.distance(self.xpos, self.ypos)
                 break
             #elif self.distance(self.xpos, self.ypos) <= self.rimD/2-self.ballD/2 and self.height > self.ypos:
                 #self.od = self.distance(self.xpos, self.ypos)
@@ -50,7 +50,10 @@ class ball:
             else:
                 self.od = self.distance(self.xpos, self.ypos)
         
-        return [xlist, ylist, isInRange]
+        return [xlist, ylist, isInRange, self.od]
+
+    def getRimRange(self):
+        return self.rimD/2-self.ballD/2
 
     def distance(self, bx, by):
         return ((self.dis-bx)**2+(self.height-by)**2)**0.5

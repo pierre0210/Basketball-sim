@@ -41,7 +41,7 @@ for d in testDistance:
     lowerV = []
     upperV = []
     
-
+plt.title("Question 1")
 plt.xlabel("angle (degree)")
 plt.ylabel("initial velocity (m/s)")
 plt.legend()
@@ -76,7 +76,8 @@ for d in testDistance:
     #plt.plot(angleX, func(angleX, *upperpopt), label=str(d)+" m upper")
     lowerV = []
     upperV = []
-    
+
+plt.title("Question 2")
 plt.xlabel("angle (degree)")
 plt.ylabel("initial velocity (m/s)")
 plt.legend()
@@ -120,6 +121,7 @@ for d in testDistance:
     lowerV = []
     upperV = []
 
+plt.title("Question 3")
 plt.xlabel("angle (degree)")
 plt.ylabel("initial velocity (m/s)")
 plt.legend()
@@ -161,7 +163,7 @@ for d in testDistance:
     lowerV = []
     upperV = []
 
-
+plt.title("Question 4")
 plt.xlabel("angle (degree)")
 plt.ylabel("initial velocity (m/s)")
 plt.legend()

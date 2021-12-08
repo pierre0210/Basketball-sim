@@ -21,15 +21,20 @@ class ball:
 
     def shoot(self, v, angle, distance):
         self.clear()
+        t = 0
         self.angle = angle
         self.dis = distance
         xlist = []
         ylist = []
+        vxList = []
+        vyList = []
+        timestamp = []
         isInRange = False
         self.vx = v*np.cos(self.angle*np.pi/180.0)
         self.vy = v*np.sin(self.angle*np.pi/180.0)
         self.od = self.distance(self.xpos, self.ypos)
         while True:
+            timestamp.append(t) 
             df = self.dragForce(self.vx, self.vy)
             lf = self.liftForce(self.vx, self.vy)
             self.xpos += self.vx*self.dt
@@ -40,6 +45,8 @@ class ball:
             #print(str(self.vx)+" "+str(self.vy))
             xlist.append(self.xpos)
             ylist.append(self.ypos)
+            vxList.append(self.vx)
+            vyList.append(self.vy)
             if self.distance(self.xpos, self.ypos) > self.od:
                 #self.od = self.distance(self.xpos, self.ypos)
                 break
@@ -51,8 +58,9 @@ class ball:
                 break
             else:
                 self.od = self.distance(self.xpos, self.ypos)
+            t += self.dt
         
-        return [xlist, ylist, isInRange, self.od]
+        return [xlist, ylist, isInRange, self.od, vxList, vyList, timestamp]
 
     def getRimRange(self):
         return self.rimD/2-self.ballD/2
